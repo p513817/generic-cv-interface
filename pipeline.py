@@ -8,15 +8,23 @@ EXTENSION_MAP={
 }
 
 def get_source_type(file_name):
+    
     if type(file_name)==int or file_name.isdigit():
         return 'V4L2'
 
     name, ext = os.path.splitext(file_name)
+    ext = ext.replace('.', '')
+
     if ext=="":
-        [ return(key) for key in ['V4L2', 'RTSP'] for keyword in EXTENSION_MAP[key] if keyword in name ]
+        for key in ['V4L2', 'RTSP']:
+            for keyword in EXTENSION_MAP[key]:
+                if keyword in name:
+                    return key
     else:
-        [ return(key) for key in ['Image', 'Video'] if ext.replace('.', '') in EXTENSION_MAP[key] ]
-        
+        for key in ['Image', 'Video']:
+            if ext in EXTENSION_MAP[key]:
+                return key
+
 class Img:
     def __init__(self, input_data) -> None:
         self.img = cv2.imread(input_data)
